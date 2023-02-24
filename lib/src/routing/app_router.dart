@@ -4,6 +4,7 @@ import 'package:cpscom/src/presentation/authenticate/loginScree.dart';
 import 'package:cpscom/src/presentation/onboarding_screen/onboarding_screen.dart';
 import 'package:cpscom/src/routing/routing_config.dart';
 import 'package:flutter/material.dart';
+import '../presentation/authenticate/forgotPassword.dart';
 import '../presentation/splash_screen/splash_screen.dart';
 
 Route<dynamic> generateRoutes(RouteSettings routeSettings) {
@@ -25,7 +26,10 @@ Route<dynamic> generateRoutes(RouteSettings routeSettings) {
       return MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       );
-
+    case forgotPassword:
+      return MaterialPageRoute(
+        builder: (context) => const ForgotPassword(),
+      );
     default:
       return MaterialPageRoute(
         builder: (BuildContext context) => Scaffold(

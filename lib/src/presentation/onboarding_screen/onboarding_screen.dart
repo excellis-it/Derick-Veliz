@@ -1,9 +1,13 @@
-import 'package:cpscom/src/constants/app_colors.dart';
-import 'package:cpscom/src/presentation/authenticate/loginScree.dart';
-import 'package:cpscom/src/presentation/group_chat/group_chat_screen.dart';
+// ignore_for_file: unnecessary_const
+
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:cpscom/src/constants/api_config.dart';
+import 'package:cpscom/src/model/cmsModel.dart';
 import 'package:cpscom/src/routing/routing_config.dart';
 import 'package:cpscom/src/utils/device_size_config.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -13,155 +17,136 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  var cmsTitle = '';
+  var cmsDescripation = '';
+  var cmsImage;
+  late Future<CmsModel> cmsGetStarted1;
   @override
   void initState() {
     super.initState();
-    // Future.delayed(Duration.zero, () async {
-    //   final FirebaseAuth _auth = FirebaseAuth.instance;
-    //   print(_auth.currentUser);
-    //   if (_auth.currentUser != null) {
-    //     Navigator.push(context,
-    //         MaterialPageRoute(builder: (_) => const GroupChatHomeScreen()));
-    //   } else {
-    //     Navigator.of(context).pushNamedAndRemoveUntil(
-    //       signInScreen,
-    //       (Route<dynamic> route) => false,
-    //     );
-    //   }
-    // });
+    cmsGetStarted();
+  }
+
+  cmsGetStarted() async {
+    Map data = {'is_panel': 'admin'};
+
+    http.Response response =
+        await http.post(Uri.parse(BaseApi.cmsGetStarted), body: data);
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      //var resMsg = jsonResponse['message'];
+      var cmsData = jsonResponse['data']['cms'];
+      setState(() {
+        cmsTitle = cmsData['title'].toString();
+        cmsDescripation = cmsData['description'].toString();
+        cmsImage = cmsData['image'].toString();
+      });
+      // cmsTitle = cmsData['title'].toString();
+      // cmsDescripation = cmsData['description'].toString();
+      // cmsImage = cmsData['image'].toString();
+    } else {}
   }
 
   @override
   Widget build(BuildContext context, [bool mounted = true]) {
     DeviceSizeConfig deviceSizeConfig = DeviceSizeConfig(context);
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            padding: const EdgeInsets.only(
-              left: 24.0,
-              right: 24.0,
-              top: 16.0,
-              bottom: 16.0,
-            ),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/group_bg.png"),
-                  fit: BoxFit.cover),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: <double>[
-                  0.25,
-                  0.65,
-                  0.75,
-                ],
-                colors: <Color>[
-                  colorBackgroundGradientStart,
-                  colorBackgroundGradientEnd,
-                  Colors.grey,
-                ],
-                tileMode: TileMode.clamp,
-              ),
-            ),
-            child: Column(
-              children: <Widget>[
-                const SizedBox(
-                  height: 75.0,
-                ),
-                Image.asset(
-                  'assets/images/group.png',
-                  height: deviceSizeConfig.blockSizeVertical * 40,
-                ),
-              ],
+        body: Stack(
+      children: <Widget>[
+        Container(
+          decoration: const BoxDecoration(
+            image: const DecorationImage(
+              image: const AssetImage("assets/images/group_bg.png"),
+              fit: BoxFit.cover,
             ),
           ),
-          DraggableScrollableSheet(
-            initialChildSize: 0.5,
-            minChildSize: 0.5,
-            maxChildSize: 0.8,
-            snap: true,
-            builder: (
-              BuildContext context,
-              ScrollController scrollController,
-            ) {
-              return Container(
-                padding: const EdgeInsets.only(
-                  left: 24.0,
-                  right: 24.0,
-                  bottom: 16.0,
-                ),
-                decoration: const BoxDecoration(
-                  //color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32.0),
-                    topRight: Radius.circular(32.0),
-                  ),
-                ),
-                child: ListView(
-                  controller: scrollController,
-                  children: <Widget>[
-                    const SizedBox(height: 100),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 24.0, right: 24.0, top: 5.0),
-                      child: Text(
-                        'Lorem ipsum dolor sit amet consectetur Nibh quisque amet',
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontSize: 16.0,
-                              color: const Color(0XFF000000),
-                            ),
-                      ),
+        ),
+        Center(
+          /** Card Widget **/
+          child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+            ),
+            shadowColor: Colors.black,
+            color: Colors.white,
+            child: SizedBox(
+              width: 700,
+              height: 600,
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: Column(
+                  children: [
+                    Column(
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        cmsImage == null
+                            ? Image.asset(
+                                'assets/images/group.png',
+                                height: deviceSizeConfig.blockSizeVertical * 40,
+                              )
+                            : Image(
+                                image: NetworkImage(
+                                  // ignore: prefer_interpolation_to_compose_strings
+                                  'https://excellis.co.in/derick-veliz-admin/public/storage/' +
+                                      cmsImage,
+                                ),
+                                height: deviceSizeConfig.blockSizeVertical * 40,
+                                //height: mediaQuery.height * 0.3,
+                                // width: MediaQuery.of(context).size.height * 3.5,
+                              ),
+                      ],
                     ),
                     const SizedBox(
-                      height: 20.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 24.0,
-                        right: 24.0,
-                        bottom: 0.0,
-                      ),
-                      child: Text(
-                        'Lorem ipsum dolor sit amet consectetur Nibh quisque amet',
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline5?.copyWith(
-                              fontSize: 13.0,
-                              color: Colors.grey[700],
-                            ),
-                      ),
-                    ),
-                    //
+                      height: 30,
+                    ), //SizedBox
+                    Text(
+                      '$cmsTitle',
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Color(0XFF000000),
+                        //color: Colors.green[900],
+                        fontWeight: FontWeight.w500,
+                      ), //Textstyle
+                    ), //Text
                     const SizedBox(
-                      height: 20.0,
-                    ),
+                      height: 10,
+                    ), //SizedBox
+                    Text(
+                      '$cmsDescripation',
+                      maxLines: 4,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                      ), //Textstyle
+                    ), //Text
+                    const SizedBox(
+                      height: 30,
+                    ), //SizedBox
                     MaterialButton(
-                      padding: const EdgeInsets.all(8),
                       textColor: Colors.white,
                       splashColor: Colors.white,
                       elevation: 8.0,
 
                       child: Container(
-                        height: MediaQuery.of(context).size.height * 0.10,
-                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.06,
+                        width: MediaQuery.of(context).size.height * 0.30,
                         decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(20)),
-                            gradient: const LinearGradient(colors: [
+                            gradient: LinearGradient(colors: [
                               Color.fromRGBO(0, 192, 255, 1),
                               Color.fromRGBO(85, 88, 255, 1)
-                            ])
-
-                            // image: DecorationImage(
-                            //     image: AssetImage('assets/images/rectangle.png'),
-                            //     fit: BoxFit.cover),
-                            ),
+                            ])),
                         child: const Padding(
-                          padding: EdgeInsets.all(30),
+                          padding: EdgeInsets.only(top: 11.0),
                           child: Text(
                             "Get Started",
                             textAlign: TextAlign.center,
@@ -178,12 +163,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       },
                     ),
                   ],
-                ),
-              );
-            },
-          )
-        ],
-      ),
-    );
+                ), //Column
+              ), //Padding
+            ), //SizedBox
+          ), //Card
+        ),
+      ],
+    ));
   }
 }

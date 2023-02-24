@@ -20,121 +20,252 @@ class _CreateAccountState extends State<CreateAccount> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/group_bg.png"),
-            fit: BoxFit.cover,
+        body: Stack(
+      children: <Widget>[
+        Container(
+          decoration: const BoxDecoration(
+            image: const DecorationImage(
+              image: const AssetImage("assets/images/group_bg.png"),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-        child: isLoading
-            ? Center(
-                child: SizedBox(
-                  height: size.height / 20,
-                  width: size.height / 20,
-                  child: const CircularProgressIndicator(),
-                ),
-              )
-            : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: size.height / 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 50.0),
-                        child: SizedBox(
-                          // height: deviceSizeConfig.blockSizeVertical * 40,
-                          width: double.infinity,
-                          child: Image.asset(
-                            'assets/images/header_icon.png',
-                            height: 50,
-                          ),
+        Center(
+          /** Card Widget **/
+          child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            shadowColor: Colors.black,
+            color: Colors.white,
+            child: SizedBox(
+              width: 700,
+              height: 600,
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: Column(
+                  children: [
+                    Column(
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 20.0,
                         ),
-                      ),
-                      SizedBox(
-                        width: size.width / 1.1,
-                        child: const Text(
+                        Image.asset(
+                          'assets/images/header_icon.png',
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        const Text(
                           "CPSCOM",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height / 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 18.0),
-                        child: Container(
-                          width: size.width,
-                          alignment: Alignment.center,
-                          child: field(size, "Name", Icons.account_box, _name),
-                        ),
-                      ),
-                      Container(
-                        width: size.width,
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 18.0),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.06,
+                        width: MediaQuery.of(context).size.height * 0.50,
                         alignment: Alignment.center,
-                        child: field(size, "email", Icons.email, _email),
+                        child: field(size, "Name", Icons.account_box, _name),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 18.0),
-                        child: Container(
-                          width: size.width,
-                          alignment: Alignment.center,
-                          child: field(size, "password", Icons.lock, _password),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      width: MediaQuery.of(context).size.height * 0.50,
+                      alignment: Alignment.center,
+                      child: field(size, "Email", Icons.email, _email),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 18.0),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.06,
+                        width: MediaQuery.of(context).size.height * 0.50,
+                        alignment: Alignment.center,
+                        child: field(size, "Password", Icons.lock, _password),
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height / 40,
+                    ),
+                    isLoading
+                        ? Center(
+                            child: SizedBox(
+                              height: size.height / 20,
+                              width: size.height / 20,
+                              child: const CircularProgressIndicator(),
+                            ),
+                          )
+                        : customButton(size),
+                    SizedBox(
+                      height: size.height / 50,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text(
+                          'Already have an account?',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height / 20,
-                      ),
-                      customButton(size),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Text(
-                            'Already have an account?',
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => LoginScreen())),
+                          child: const Text(
+                            'SIGN IN',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
+                              color: Color(0xff64b6ff),
                             ),
                           ),
-                          const SizedBox(
-                            width: 5.0,
-                          ),
-                          GestureDetector(
-                            onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => LoginScreen())),
-                            child: const Text(
-                              'SIGN IN',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff64b6ff),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: size.height / 1,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-      ),
-    );
+                        ),
+                      ],
+                    ),
+                  ],
+                ), //Column
+              ), //Padding
+            ), //SizedBox
+          ), //Card
+        ),
+      ],
+    ));
+
+    // return Scaffold(
+    //   body: Container(
+    //     decoration: const BoxDecoration(
+    //       image: DecorationImage(
+    //         image: AssetImage("assets/images/group_bg.png"),
+    //         fit: BoxFit.cover,
+    //       ),
+    //     ),
+    //     child: isLoading
+    //         ? Center(
+    //             child: SizedBox(
+    //               height: size.height / 20,
+    //               width: size.height / 20,
+    //               child: const CircularProgressIndicator(),
+    //             ),
+    //           )
+    //         : SingleChildScrollView(
+    //             child: Padding(
+    //               padding: const EdgeInsets.all(16.0),
+    //               child: Column(
+    //                 children: [
+    //                   SizedBox(
+    //                     height: size.height / 10,
+    //                   ),
+    //                   Padding(
+    //                     padding: const EdgeInsets.only(top: 50.0),
+    //                     child: SizedBox(
+    //                       // height: deviceSizeConfig.blockSizeVertical * 40,
+    //                       width: double.infinity,
+    //                       child: Image.asset(
+    //                         'assets/images/header_icon.png',
+    //                         height: 50,
+    //                       ),
+    //                     ),
+    //                   ),
+    //                   SizedBox(
+    //                     width: size.width / 1.1,
+    //                     child: const Text(
+    //                       "CPSCOM",
+    //                       textAlign: TextAlign.center,
+    //                       style: TextStyle(
+    //                         fontSize: 20,
+    //                         fontWeight: FontWeight.bold,
+    //                       ),
+    //                     ),
+    //                   ),
+    //                   SizedBox(
+    //                     height: size.height / 10,
+    //                   ),
+    //                   Padding(
+    //                     padding: const EdgeInsets.symmetric(vertical: 18.0),
+    //                     child: Container(
+    //                       height: MediaQuery.of(context).size.height * 0.06,
+    //                       width: MediaQuery.of(context).size.height * 0.60,
+    //                       alignment: Alignment.center,
+    //                       child: field(size, "Name", Icons.account_box, _name),
+    //                     ),
+    //                   ),
+    //                   Container(
+    //                     height: MediaQuery.of(context).size.height * 0.06,
+    //                     width: MediaQuery.of(context).size.height * 0.60,
+    //                     alignment: Alignment.center,
+    //                     child: field(size, "email", Icons.email, _email),
+    //                   ),
+    //                   Padding(
+    //                     padding: const EdgeInsets.symmetric(vertical: 18.0),
+    //                     child: Container(
+    //                       height: MediaQuery.of(context).size.height * 0.06,
+    //                       width: MediaQuery.of(context).size.height * 0.60,
+    //                       alignment: Alignment.center,
+    //                       child: field(size, "password", Icons.lock, _password),
+    //                     ),
+    //                   ),
+    //                   SizedBox(
+    //                     height: size.height / 40,
+    //                   ),
+    //                   customButton(size),
+    //                   const SizedBox(
+    //                     height: 15.0,
+    //                   ),
+    //                   Row(
+    //                     mainAxisAlignment: MainAxisAlignment.center,
+    //                     children: <Widget>[
+    //                       const Text(
+    //                         'Already have an account?',
+    //                         style: TextStyle(
+    //                           fontSize: 12,
+    //                           fontWeight: FontWeight.w600,
+    //                         ),
+    //                       ),
+    //                       const SizedBox(
+    //                         width: 5.0,
+    //                       ),
+    //                       GestureDetector(
+    //                         onTap: () => Navigator.of(context).push(
+    //                             MaterialPageRoute(
+    //                                 builder: (_) => LoginScreen())),
+    //                         child: const Text(
+    //                           'SIGN IN',
+    //                           style: TextStyle(
+    //                             fontSize: 14,
+    //                             fontWeight: FontWeight.w600,
+    //                             color: Color(0xff64b6ff),
+    //                           ),
+    //                         ),
+    //                       ),
+    //                     ],
+    //                   ),
+    //                   SizedBox(
+    //                     height: size.height / 1,
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //           ),
+    //   ),
+    // );
   }
 
   Widget customButton(Size size) {
@@ -166,12 +297,12 @@ class _CreateAccountState extends State<CreateAccount> {
             }
           });
         } else {
-          print("Please enter Fields");
+          //print("Please enter Fields");
         }
       },
       child: Container(
-        height: size.height / 18,
-        width: size.width / 1.5,
+        height: MediaQuery.of(context).size.height * 0.06,
+        width: MediaQuery.of(context).size.height * 0.30,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
           gradient: const LinearGradient(

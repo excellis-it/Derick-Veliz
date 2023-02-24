@@ -5,8 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class GroupInfo extends StatefulWidget {
-  final String groupId, groupName;
-  const GroupInfo({required this.groupId, required this.groupName, Key? key})
+  final String groupId, groupName, groupImage;
+  const GroupInfo(
+      {required this.groupId,
+      required this.groupName,
+      Key? key,
+      required this.groupImage})
       : super(key: key);
 
   @override
@@ -24,8 +28,9 @@ class _GroupInfoState extends State<GroupInfo> {
   @override
   void initState() {
     super.initState();
-
-    getGroupDetails();
+    setState(() {
+      getGroupDetails();
+    });
   }
 
   Future getGroupDetails() async {
@@ -35,7 +40,7 @@ class _GroupInfoState extends State<GroupInfo> {
         .get()
         .then((chatMap) {
       membersList = chatMap['members'];
-      print('mmmm????' + membersList.toString());
+      //print('mmmm????' + membersList.toString());
       isLoading = false;
       setState(() {});
     });
@@ -134,8 +139,7 @@ class _GroupInfoState extends State<GroupInfo> {
 
     return SafeArea(
       child: Scaffold(
-        // backgroundColor: Color(0xffA6A6A6),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[200],
         body: isLoading
             ? Container(
                 height: size.height,
@@ -152,84 +156,125 @@ class _GroupInfoState extends State<GroupInfo> {
                       child: BackButton(),
                     ),
                     Card(
-                      elevation: 5,
                       color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: size.height / 5,
-                          width: size.width / 1.1,
-                          child: Column(
-                            children: [
-                              Container(
-                                height: size.height / 8,
-                                width: size.height / 8,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey,
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: SizedBox(
+                        width: 700,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            height: size.height / 5,
+                            width: size.width / 1.1,
+                            child: Column(
+                              children: [
+                                (widget.groupImage == '' ||
+                                        widget.groupImage == null)
+                                    ? Container(
+                                        height: 80,
+                                        width: 80,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey,
+                                        ),
+                                        child: const Icon(
+                                          Icons.group,
+                                          color: Colors.white,
+                                          //size: size.width / 20,
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 48, // Image radius
+                                        backgroundImage: NetworkImage(
+                                          'https://excellis.co.in/derick-veliz-admin/public/storage/${widget.groupImage}',
+                                        ),
+                                      ),
+                                // Container(
+                                //   height: size.height / 8,
+                                //   width: size.height / 8,
+                                //   decoration: const BoxDecoration(
+                                //     shape: BoxShape.circle,
+                                //     color: Colors.grey,
+                                //   ),
+                                //   child: const Icon(
+                                //     Icons.group,
+                                //     color: Colors.white,
+                                //     //size: size.width / 10,
+                                //   ),
+                                // ),
+                                const SizedBox(
+                                  height: 10,
                                 ),
-                                child: const Icon(
-                                  Icons.group,
-                                  color: Colors.white,
-                                  //size: size.width / 10,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  child: Text(
-                                    widget.groupName,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+                                Expanded(
+                                  child: Container(
+                                    child: Text(
+                                      widget.groupName,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  child: Text(
-                                    "Group . ${membersList.length} Members",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
+                                Expanded(
+                                  child: Container(
+                                    child: Text(
+                                      "Group . ${membersList.length} Members",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                     Card(
-                        elevation: 5,
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                        ),
                         color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            leading: const Icon(Icons.notifications),
-                            title: const Text(
-                              'Mute Notification',
-                              style: TextStyle(
-                                  // fontSize: size.width / 18,
-                                  //fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                            trailing: Switch(
-                              value: isSwitched,
-                              onChanged: (value) {
-                                setState(() {
-                                  isSwitched = value;
-                                  // print(isSwitched);
-                                });
-                              },
-                              activeTrackColor: Colors.grey,
-                              activeColor: myGreen,
+                        child: SizedBox(
+                          width: 700,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              leading: const Icon(Icons.notifications),
+                              title: const Text(
+                                'Mute Notification',
+                                style: TextStyle(
+                                    // fontSize: size.width / 18,
+                                    //fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                              trailing: Switch(
+                                value: isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched = value;
+                                    // print(isSwitched);
+                                  });
+                                },
+                                activeTrackColor: Colors.grey,
+                                activeColor: myGreen,
+                              ),
                             ),
                           ),
                         )),
@@ -261,6 +306,7 @@ class _GroupInfoState extends State<GroupInfo> {
                             ),
                           )
                         : const SizedBox(),
+
                     Flexible(
                       child: ListView.builder(
                         itemCount: membersList.length,
@@ -303,7 +349,6 @@ class _GroupInfoState extends State<GroupInfo> {
                   ],
                 ),
               ),
-
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           notchMargin: 7.0,

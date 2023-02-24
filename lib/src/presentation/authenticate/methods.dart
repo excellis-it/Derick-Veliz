@@ -3,6 +3,8 @@ import 'package:cpscom/src/presentation/authenticate/loginScree.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:cpscom/src/utils/messgaetoast.dart';
+
 Future<User?> createAccount(String name, String email, String password) async {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -47,8 +49,31 @@ Future<User?> logIn(String email, String password) async {
         .then((value) => userCredential.user!.updateDisplayName(value['name']));
 
     return userCredential.user;
-  } catch (e) {
-    print(e);
+    // } on FirebaseAuthException catch (e) {
+    //   print("Test???" + e.code);
+    //   showToastMessage(e.code);
+    // }
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'network-request-failed') {
+      showToastMessage('No Internet Connection');
+      //devtools.log('No Internet Connection');
+    } else if (e.code == "wrong-password") {
+      showToastMessage('Please Enter correct password');
+    } else if (e.code == 'user-not-found') {
+      showToastMessage('Email not found');
+      // print('Email not found');
+    } else if (e.code == 'too-many-requests') {
+      showToastMessage('Too many attempts please try later');
+      //print('Too many attempts please try later');
+    } else if (e.code == 'unknwon') {
+      showToastMessage('Email and password field are required');
+      //print('Email and password field are required');
+    } else if (e.code == 'unknown') {
+      showToastMessage('Email and Password Fields are required');
+      //print(e.code);
+    } else {
+      print(e.code);
+    }
     return null;
   }
 }

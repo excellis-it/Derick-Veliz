@@ -11,7 +11,7 @@ class Authenticate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_auth.currentUser != null) {
-      return const GroupChatHomeScreen();
+      return GroupChatHomeScreen();
     } else {
       return const LoginScreen();
     }

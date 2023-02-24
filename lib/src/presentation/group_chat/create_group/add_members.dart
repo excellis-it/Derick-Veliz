@@ -118,75 +118,121 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
       appBar: AppBar(
         title: const Text("Add Members"),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: ListView.builder(
-                itemCount: membersList.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () => onRemoveMembers(index),
-                    leading: const Icon(Icons.account_circle),
-                    title: Text(membersList[index]['name']),
-                    subtitle: Text(membersList[index]['email']),
-                    trailing: const Icon(Icons.close),
-                  );
-                },
+      body: Center(
+        child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
               ),
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
             ),
-            SizedBox(
-              height: size.height / 20,
-            ),
-            Container(
-              height: size.height / 14,
-              width: size.width,
-              alignment: Alignment.center,
-              child: SizedBox(
-                height: size.height / 14,
-                width: size.width / 1.15,
-                child: TextField(
-                  controller: _search,
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+            shadowColor: Colors.black,
+            color: Colors.white,
+            child: SizedBox(
+              width: 700,
+              height: 500,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: ListView.builder(
+                        itemCount: membersList.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            onTap: () => onRemoveMembers(index),
+                            leading: const Icon(Icons.account_circle),
+                            title: Text(membersList[index]['name']),
+                            subtitle: Text(membersList[index]['email']),
+                            trailing: const Icon(Icons.close),
+                          );
+                        },
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: size.height / 20,
+                    ),
+                    Container(
+                      height: size.height / 14,
+                      width: size.width,
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        height: size.height / 14,
+                        width: MediaQuery.of(context).size.height * 0.40,
+                        child: TextField(
+                          controller: _search,
+                          cursorColor: Colors.black,
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height / 50,
+                    ),
+                    isLoading
+                        ? Container(
+                            height: size.height / 12,
+                            width: size.height / 12,
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(),
+                          )
+                        : MaterialButton(
+                            padding: const EdgeInsets.all(8),
+                            textColor: Colors.white,
+                            splashColor: Colors.white,
+                            elevation: 8.0,
+                            // ),
+                            onPressed: onSearch,
+
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.06,
+                              width: MediaQuery.of(context).size.height * 0.20,
+                              decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  gradient: LinearGradient(colors: [
+                                    Color.fromRGBO(0, 192, 255, 1),
+                                    Color.fromRGBO(85, 88, 255, 1)
+                                  ])),
+                              child: const Padding(
+                                padding: EdgeInsets.all(13),
+                                child: Text(
+                                  "Search",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                    //  ElevatedButton(
+                    //     onPressed: onSearch,
+                    //     child: const Text("Search"),
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: Colors.blueAccent,
+                    //     )),
+
+                    userMap != null
+                        ? ListTile(
+                            onTap: onResultTap,
+                            leading: const Icon(Icons.account_box),
+                            title: Text(userMap!['name']),
+                            subtitle: Text(userMap!['email']),
+                            trailing: const Icon(Icons.add),
+                          )
+                        : const SizedBox(),
+                  ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: size.height / 50,
-            ),
-            isLoading
-                ? Container(
-                    height: size.height / 12,
-                    width: size.height / 12,
-                    alignment: Alignment.center,
-                    child: const CircularProgressIndicator(),
-                  )
-                : ElevatedButton(
-                    onPressed: onSearch,
-                    child: const Text("Search"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                    )),
-            userMap != null
-                ? ListTile(
-                    onTap: onResultTap,
-                    leading: const Icon(Icons.account_box),
-                    title: Text(userMap!['name']),
-                    subtitle: Text(userMap!['email']),
-                    trailing: const Icon(Icons.add),
-                  )
-                : const SizedBox(),
-          ],
-        ),
+            )),
       ),
       floatingActionButton: membersList.length >= 2
           ? FloatingActionButton(

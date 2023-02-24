@@ -29,23 +29,65 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: <Color>[
-              colorBackgroundGradientStart,
-              colorBackgroundGradientEnd,
-            ],
-            tileMode: TileMode.mirror,
-          ),
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          children: [
+            Image.asset(
+              "assets/images/header_icon.png",
+            ),
+            Column(
+              children: const [
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "CPSCOM",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 28.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Icon(
+                  Icons.lock,
+                  color: Colors.orange,
+                  size: 50,
+                )
+              ],
+            )
+          ],
         ),
-        child: Image.asset('assets/images/splash.png',
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover),
-      ),
-    );
+        const SizedBox(
+          height: 30,
+        ),
+      ],
+    ));
+
+    // Material(
+    //   child: Container(
+    //     decoration: const BoxDecoration(
+    //       gradient: LinearGradient(
+    //         begin: Alignment.topCenter,
+    //         end: Alignment.bottomCenter,
+    //         colors: <Color>[
+    //           colorBackgroundGradientStart,
+    //           colorBackgroundGradientEnd,
+    //         ],
+    //         tileMode: TileMode.mirror,
+    //       ),
+    //     ),
+    //     child: Image.asset('assets/images/splash.png',
+    //         height: MediaQuery.of(context).size.height,
+    //         width: MediaQuery.of(context).size.width,
+    //         fit: BoxFit.cover),
+    //   ),
+    // );
   }
 }

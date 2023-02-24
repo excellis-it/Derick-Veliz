@@ -95,11 +95,11 @@ class _AddMembersINGroupState extends State<AddMembersINGroup> {
               alignment: Alignment.center,
               child: SizedBox(
                 height: size.height / 14,
-                width: size.width / 1.15,
+                width: MediaQuery.of(context).size.height * 0.40,
                 child: TextField(
                   controller: _search,
                   decoration: InputDecoration(
-                    hintText: "Search",
+                    hintText: "Email",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -117,12 +117,41 @@ class _AddMembersINGroupState extends State<AddMembersINGroup> {
                     alignment: Alignment.center,
                     child: const CircularProgressIndicator(),
                   )
-                : ElevatedButton(
+                : MaterialButton(
+                    padding: const EdgeInsets.all(8),
+                    textColor: Colors.white,
+                    splashColor: Colors.white,
+                    elevation: 8.0,
+                    // ),
                     onPressed: onSearch,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
+
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      width: MediaQuery.of(context).size.height * 0.20,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          gradient: LinearGradient(colors: [
+                            Color.fromRGBO(0, 192, 255, 1),
+                            Color.fromRGBO(85, 88, 255, 1)
+                          ])),
+                      child: const Padding(
+                        padding: EdgeInsets.all(13),
+                        child: Text(
+                          "Search",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
                     ),
-                    child: const Text("Search")),
+                  ),
+
+            // ElevatedButton(
+            //     onPressed: onSearch,
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.blueAccent,
+            //     ),
+            //     child: const Text("Search")),
+
             userMap != null
                 ? ListTile(
                     onTap: onAddMembers,
